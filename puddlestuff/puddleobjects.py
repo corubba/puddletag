@@ -13,10 +13,11 @@ from bisect import bisect_left, insort_left  # for unique function.
 from collections import defaultdict
 from collections.abc import Callable, Generator
 from copy import copy
-from functools import partial
+from functools import partial, reduce
 from glob import glob
 from io import StringIO
 from itertools import groupby  # for unique function.
+from operator import or_
 from typing import Any, Generator, List, Optional, Tuple, Union
 
 from PyQt6.QtCore import QBuffer, QByteArray, QCollator, QCollatorSortKey, QDir, QLocale, QObject, QRectF, QSettings, \
@@ -79,10 +80,8 @@ def keycmp(modifier):
 modifiers = {}
 for i in range(1, len(mod_keys)):
     for keys in set(itertools.permutations(mod_keys, i)):
-        mod = keys[0]
-        for key in keys[1:]:
-            mod = mod | key
-        modifiers[int(mod)] = '+'.join(mod_keys[key] for key in sorted(keys, key=keycmp) if mod_keys[key])
+        mask = reduce(or_, keys)
+        modifiers[mask] = '+'.join(mod_keys[key] for key in sorted(keys, key=keycmp) if mod_keys[key])
 
 mod_keys = set((Qt.Key.Key_Shift, Qt.Key.Key_Control, Qt.Key.Key_Meta, Qt.Key.Key_Alt))
 
@@ -2448,7 +2447,7 @@ class ShortcutEditor(QLineEdit):
         text = ''
 
         if event.modifiers():
-            text = modifiers[int(event.modifiers())]
+            text = modifiers[event.modifiers()]
 
         if event.key() not in mod_keys:
             if text:
