@@ -15,7 +15,7 @@ from . import mainwin
 from . import tagmodel
 from . import version_string, changeset
 from .mainwin import funcs as mainfuncs
-from .masstag import dialogs
+from .masstag import dialogs as masstagdialogs
 from .puddleobjects import (PuddleConfig, PuddleDock, winsettings,
                             progress, PuddleStatus, errormsg, dircmp, get_icon)
 from .puddlesettings import SettingsDialog, load_gen_settings, update_settings
@@ -61,17 +61,17 @@ def create_tool_windows(parent, extra=None):
     """Creates the dock widgets for the main window (parent) using
     the modules stored in puddlestuff/mainwin.
 
-    Returns (the toggleViewActions of the docks, the dockWidgets the
-    mselves)."""
+    Returns (the toggleViewActions of the docks, the dockWidgets themselves)."""
     actions = []
     docks = []
     cparser = PuddleConfig()
     cparser.filename = ls.menu_path
-    widgets = (mainwin.tagpanel, mainwin.artwork,
-               mainwin.dirview, mainwin.patterncombo, mainwin.filterwin,
-               mainwin.tagsources, mainwin.storedtags, mainwin.logdialog,
-               dialogs)
-
+    widgets = (
+               mainwin.tagpanel, mainwin.dirview, mainwin.artwork, mainwin.storedtags,
+               mainwin.tagsources, masstagdialogs, mainwin.logdialog,
+               mainwin.filterwin,
+               mainwin.patterncombo,
+               )
     controls = [z.control for z in widgets]
     controls.extend(mainwin.action_dialogs.controls)
     if extra:
@@ -103,6 +103,17 @@ def create_tool_windows(parent, extra=None):
         if scut:
             action.setShortcut(scut)
         actions.append(action)
+
+    # masstag on top of tagsources
+    tagsources_widget = next(x for x in docks if x.title == mainwin.tagsources.control[0])
+    masstag_widget = next(x for x in docks if x.title == masstagdialogs.control[0])
+    parent.tabifyDockWidget(tagsources_widget, masstag_widget)
+
+    # functions on top of actions
+    actions_widget = next(x for x in docks if x.title == mainwin.action_dialogs.controls[1][0])
+    functions_widget = next(x for x in docks if x.title == mainwin.action_dialogs.controls[0][0])
+    parent.tabifyDockWidget(actions_widget, functions_widget)
+
     return actions, docks
 
 

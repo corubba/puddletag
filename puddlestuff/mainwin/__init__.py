@@ -8,4 +8,5 @@ from . import patterncombo
 from . import previews
 from . import storedtags
 from . import tagpanel
+from . import tagsources
 from . import tagtools

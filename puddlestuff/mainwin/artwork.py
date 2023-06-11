@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from ..audioinfo.util import commonimages
 from ..constants import KEEP, BLANK
-from ..constants import RIGHTDOCK, SELECTIONCHANGED
+from ..constants import LEFTDOCK, SELECTIONCHANGED
 from ..puddleobjects import PicWidget
 
 
@@ -141,4 +141,4 @@ class ArtworkWidget(QWidget):
             self._audios = []
 
 
-control = ('Artwork', ArtworkWidget, RIGHTDOCK, False)
+control = ('Artwork', ArtworkWidget, LEFTDOCK, False)
