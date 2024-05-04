@@ -1,0 +1,11 @@
+diff -ur /usr/src/qtbase-opensource-src-5.15.10+dfsg-3/debian/rules qtbase-opensource-src-5.15.10+dfsg/debian/rules
+--- /usr/src/qtbase-opensource-src-5.15.10+dfsg-3/debian/rules	2023-07-27 22:01:32.000000000 +0200
++++ qtbase-opensource-src-5.15.10+dfsg/debian/rules	2024-04-21 20:13:42.547011166 +0200
+@@ -127,6 +127,7 @@
+ 	            -no-mimetype-database \
+ 	            -no-feature-relocatable \
+ 	            -xcb-native-painting \
++		    -debug -optimize-debug \
+ 	            $(extra_configure_opts) \
+ 	            $(cpu_opt) \
+ 	            QMAKE_CFLAGS="$(CFLAGS)" \
