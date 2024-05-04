@@ -60,7 +60,7 @@ echo "Waiting for startup to finish"
 sleep 10
 
 echo "Running ${ROUNDS} test rounds ..."
-ydotool key --delay 12 --repeat "2" "down" || exit 40
+ydotool key "108:1" "108:0" "108:1" "108:0" || exit 40  # 2x down
 for I in $(seq 1 "$ROUNDS") ; do
   echo "  Round ${I}/${ROUNDS}"
 
@@ -75,10 +75,14 @@ for I in $(seq 1 "$ROUNDS") ; do
   fi
 
   if [ 1 -lt "$FILES_PER_ROUND" ] ; then
-    ydotool key --delay 12 --repeat "$(( $FILES_PER_ROUND - 1))" "shift+down" || exit 42
+    ydotool key "42:1" || exit 42  # shift-down
+    for J in $(seq 1 $(( $FILES_PER_ROUND - 1)) ) ; do
+      ydotool key "108:1" "108:0" || exit 43  # down
+    done
+    ydotool key "42:0" || exit 44  # shift-up
   fi
-  ydotool key "Delete" || exit 43
-  ydotool key "alt+z" || exit 44
+  ydotool key "111:1" "111:0" || exit 45  # Delete
+  ydotool key "56:1" "44:1" "44:0" "56:0" || exit 46  # alt+z
 
   sleep ".3s"
 done
